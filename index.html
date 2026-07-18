@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Percentage Interactive Lab</title>
+    <style>
+        :root {
+            --primary: #FF9F1C;
+            --secondary: #2EC4B6;
+            --bg-color: #FDFFFC;
+            --text-dark: #011627;
+            --danger: #E71D36;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-dark);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h1 {
+            color: var(--primary);
+            text-shadow: 2px 2px 0px rgba(0,0,0,0.1);
+            font-size: 2.5rem;
+            margin-bottom: 5px;
+        }
+
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            max-width: 1000px;
+            justify-content: center;
+            padding-top: 20px;
+        }
+
+        .fraction {
+            display: inline-flex;
+            flex-direction: column;
+            align-items: center;
+            vertical-align: middle;
+            line-height: 1.2;
+            margin: 0 6px;
+            font-weight: bold;
+        }
+        
+        .fraction .top {
+            border-bottom: 2px solid currentColor;
+            padding: 2px 5px;
+            width: 100%;
+            text-align: center;
+            box-sizing: border-box;
+        }
+        
+        .fraction .bottom {
+            padding: 2px 5px;
+            width: 100%;
+            text-align: center;
+            box-sizing: border-box;
+        }
+
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 8px 15px rgba(0,0,0,0.1);
+            border: 3px solid var(--secondary);
+            
+            /* --- UPDATED TO BE COMFORTABLY LARGER --- */
+            width: 520px;
+            max-width: 100%;
+            aspect-ratio: 1 / 1; 
+            box-sizing: border-box;
+            /* ---------------------------------------- */
+
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between; /* Evenly distributes elements vertically */
+        }
+
+        .card h2 {
+            margin: 0;
+            color: var(--secondary);
+            font-size: 2rem;
+        }
+
+        .grid-100 {
+            display: grid;
+            grid-template-columns: repeat(10, 1fr);
+            gap: 3px;
+            margin: 15px 0;
+            width: 240px;  
+            height: 240px;
+        }
+
+        .grid-box {
+            background-color: #eee;
+            border-radius: 3px;
+            border: 1px solid #ccc;
+            transition: background-color 0.1s;
+        }
+
+        .grid-box.active {
+            background-color: var(--primary);
+            border-color: #d48011;
+        }
+
+        .slider-container {
+            width: 100%;
+            margin: 10px 0;
+        }
+
+        input[type="range"] {
+            width: 100%;
+            accent-color: var(--primary);
+            cursor: pointer;
+        }
+
+        .equation-display {
+            font-size: 1.6rem;
+            font-weight: bold;
+            background: #f4f4f4;
+            padding: 12px 25px;
+            border-radius: 10px;
+            text-align: center;
+            width: 85%;
+            box-sizing: border-box;
+        }
+
+        .highlight { color: var(--danger); }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- Visualizer Module -->
+        <div class="card">
+            <h2>✨ What is a Percent? ✨</h2>
+            <p style="margin: 0; font-size: 1.1rem;"><strong>Per cent</strong> means <strong>"for every 100"</strong>.</p>
+            
+            <div class="grid-100" id="grid">
+                <!-- Javascript will generate 100 boxes here -->
+            </div>
+
+            <div class="slider-container">
+                <input type="range" id="percentSlider" min="0" max="100" value="50">
+            </div>
+
+            <div class="equation-display">
+                <span id="eq-pct" class="highlight">50</span>% 
+                = 
+                <div class="fraction">
+                    <span class="top"><span id="eq-frac-num" class="highlight">50</span></span>
+                    <span class="bottom">100</span>
+                </div>
+                = <span id="eq-dec" class="highlight">0.50</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- Grid Logic ---
+        const grid = document.getElementById('grid');
+        const slider = document.getElementById('percentSlider');
+        const eqPct = document.getElementById('eq-pct');
+        const eqFracNum = document.getElementById('eq-frac-num');
+        const eqDec = document.getElementById('eq-dec');
+
+        // Create 100 boxes
+        for (let i = 0; i < 100; i++) {
+            let box = document.createElement('div');
+            box.classList.add('grid-box');
+            grid.appendChild(box);
+        }
+        
+        const boxes = document.querySelectorAll('.grid-box');
+
+        function updateGrid() {
+            let val = parseInt(slider.value);
+            
+            // Color the boxes
+            boxes.forEach((box, index) => {
+                if (index < val) {
+                    box.classList.add('active');
+                } else {
+                    box.classList.remove('active');
+                }
+            });
+
+            // Update Text
+            eqPct.innerText = val;
+            eqFracNum.innerText = val;
+            eqDec.innerText = (val / 100).toFixed(2);
+        }
+
+        // Listen for slider movement
+        slider.addEventListener('input', updateGrid);
+        
+        // Initial call to set 50% state
+        updateGrid();
+    </script>
+</body>
+</html>
